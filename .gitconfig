@@ -1,0 +1,9 @@
+[init]
+	defaultBranch = master
+[user]
+	name = Trevor Sears
+	email = trevor@trevorsears.com
+[core]
+	editor = vim
+[pull]
+	rebase = false
