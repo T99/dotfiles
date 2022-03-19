@@ -1,0 +1,5 @@
+.mybash    ~/.mybash
+.vimrc     ~/.vimrc
+.vim       ~/.vim
+.tmux.conf ~/.tmux.conf
+.gitconfig ~/.gitconfig

@@ -1,0 +1,78 @@
+#!/bin/bash
+
+echo "Installing dotfiles..."
+
+DEPLOYMENTS_FILE="deployments"
+DEPLOYMENTS_FILE_DESCRIPTOR=20
+
+# Make sure that the deployments file actually exists and is readable.
+if [ ! -r "$DEPLOYMENTS_FILE" ]; then
+	echo "Failed to find 'deployments' file, exiting..."
+	exit 1
+fi
+
+function install_dotfile {
+
+	echo "Creating symlink for $2 --> $1..."
+	ln -s $1 $2
+
+}
+
+# Loop through the possible deployments and attempt each operation.
+while IFS= read -r -u $DEPLOYMENTS_FILE_DESCRIPTOR line; do
+	
+	# Strip out the source and destination files into their own variables.
+	line=($line)
+	source_file="${line[0]}"
+	destination_file="${line[1]}"
+	
+	# Canonicalize the paths to the source and destination files.
+	source_file="${source_file/#\~/$HOME}"
+	source_file="$(realpath -s $source_file)"
+	destination_file="${destination_file/#\~/$HOME}"
+	destination_file="$(realpath -s $destination_file)"
+	
+	echo
+	echo "     Source file: $source_file"
+	echo "Destination file: $destination_file"
+		
+	# If the given dotfile has already been installed/linked...
+	if [ "$source_file" -ef "$destination_file" ]; then
+		
+		# Do nothing!
+		echo "Installation already in place."
+		
+	# If the destination file already exists...
+	elif [ -e "$destination_file" ]; then
+		
+		echo "The destination file for '$source_file' already exists ('$destination_file')."
+		read -p "Would you like to overwrite the destination file? [y/n] " should_overwrite
+		
+		# Make the user input lower case.
+		should_overwrite=$(echo "$should_overwrite" | tr '[:upper:]' '[:lower:]')
+
+		# If the user has elected to overwrite the destination file...
+		if [ "$should_overwrite" = "y" ]; then
+			
+			rm -rf $destination_file
+			install_dotfile $source_file $destination_file
+
+		# If the user has elected NOT to overwrite the destination file...
+		else
+
+			echo "Skippings installation for '$source_file'..."
+
+		fi
+		
+	# If the destination file does not yet exist...
+	else
+		
+		install_dotfile $source_file $destination_file
+		
+	fi
+	
+done {DEPLOYMENTS_FILE_DESCRIPTOR}< "$DEPLOYMENTS_FILE"
+
+echo
+echo "Done!"
+
