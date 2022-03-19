@@ -1,0 +1,64 @@
+#!/bin/bash
+# Trevor's Bash Configuration file
+
+# Bash Configuration Options
+
+	# Enable extended globbing features.
+	shopt -s extglob
+
+	# Allow Bash to expand '.' as part of filename globbing.
+	shopt -s dotglob
+
+# $PATH Modifications
+
+	# Add the scriptbin to the $PATH.
+	export PATH="$PATH:$HOME/dev/scriptbin"
+
+# Custom Environment Variables
+
+	# Set the default editors.
+	export VISUAL=vim
+	export EDITOR="$VISUAL"
+
+	# Set environment variables that point to the locations of various configuration files.
+	export MYBASH="$HOME/.mybash"
+	export MYBASHRC="$HOME/.bashrc"
+	export MYVIMRC="$HOME/.vimrc"
+	export MYTMUXRC="$HOME/.tmux.conf"
+
+# Custom Aliases
+
+	# Aliases to easily reload Bash configuration files.
+	alias rebash="source $MYBASH"
+	alias rebashrc="source $MYBASHRC"
+	
+	# Aliases to easily modify Bash configuration files.
+	alias editbash="$EDITOR $MYBASH"
+	alias editbashrc="$EDITOR $MYBASHRC"
+
+	# Aliases to easily modify configuration files for other programs.
+	alias editvim="$EDITOR $MYVIMRC"
+	alias edittmux="$EDITOR $MYTMUXRC"
+
+	# Set variables for the date and datetime formats to use for 'ls'.
+	LS_DATE_FORMAT="+%b %d '\''%y"
+	LS_DATETIME_FORMAT="$LS_DATE_FORMAT %r"
+
+	# Shadow aliases for a number of commands to set default options.
+	alias ls="ls -lAhp --color --group-directories-first --time-style='$LS_DATE_FORMAT'"
+	alias lst="ls --time-style='$LS_DATETIME_FORMAT'"
+	alias grep="grep --color=auto"
+	alias egrep="egrep --color=auto"
+	alias fgrep="fgrep --color=auto"
+	alias tree="tree -aFC --dirsfirst"
+
+	# Alias to automatically fully reinitialize the current NPM package environment.
+	alias npmr="rm -rf ./package-lock.json ./node_modules && npm i"
+
+# Custom Installations
+
+	# Load NMV (Node Version Manager)
+	export NVM_DIR="/opt/nvm"
+	[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+	[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
