@@ -62,3 +62,17 @@
 	" Override color scheme settings to allow transparent background.
 	hi Normal guibg=NONE ctermbg=NONE
 
+" Netrw (File Browser) Settings
+	
+	" Use the 'tree' list style.
+	let g:netrw_listtyle = 3
+	
+	" Hide the Netrw banner.
+	let g:netrw_banner = 0
+	
+	" Open files in the previous pane.
+	let g:netrw_browse_split = 4
+	
+	" Allocate 25% of the window width to Netrw.
+	let g:netrw_winsize = 25
+
