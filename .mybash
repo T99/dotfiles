@@ -43,6 +43,7 @@
 	# Set variables for the date and datetime formats to use for 'ls'.
 	LS_DATE_FORMAT="+%b %d '\''%y"
 	LS_DATETIME_FORMAT="$LS_DATE_FORMAT %r"
+	TREE_DATETIME_FORMAT="%b %d '\''%y %I:%M:%S %p"
 
 	# Shadow aliases for a number of commands to set default options.
 	alias ls="ls -lAhp --color --group-directories-first --time-style='$LS_DATE_FORMAT'"
@@ -50,7 +51,7 @@
 	alias grep="grep --color=auto"
 	alias egrep="egrep --color=auto"
 	alias fgrep="fgrep --color=auto"
-	alias tree="tree -aFC --dirsfirst"
+	alias tree="tree -apughFCD --dirsfirst --du --timefmt='$TREE_DATETIME_FORMAT'"
 
 	# Alias to automatically fully reinitialize the current NPM package environment.
 	alias npmr="rm -rf ./package-lock.json ./node_modules && npm i"
