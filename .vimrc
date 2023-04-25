@@ -27,6 +27,9 @@
 	
 	" Show a count of search results in the short message.
 	set shortmess-=S
+	
+	" Show a visual wrapping guide for an 80-character max line length.
+	set colorcolumn=80
 
 " Indentation Settings
 	
