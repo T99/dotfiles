@@ -84,6 +84,9 @@
 		
 	}
 	
+	unset -f getForegroundColor
+	unset -f getBackgroundColor
+	
 	PROMPT_COMMAND="setPrompt"
 
 # Custom Aliases
