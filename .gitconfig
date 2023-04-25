@@ -1,10 +1,48 @@
-[init]
-	defaultBranch = master
-[user]
-	name = Trevor Sears
-	email = trevor@trevorsears.com
+[color]
+	# Use the built-in automatic color switching.
+	ui = auto
+	
+[commit]
+	# Use the default commit message template.
+	# template = default
+	
+	# GPG sign commits by default.
+	gpgSign = true
+	
 [core]
-	editor = vim
+	# Set the default editor to fall back to the one set by my shell.
+	# editor = default
+	
+	# Set the default pager to 'less'.
 	pager = less
+	
+	# Use the default value for the global includes file of 'none'.
+	# excludesFile = default
+	
+[help]
+	# Leave the autocorrect system disabled.
+	# autocorrect = default
+	
+[init]
+	# Use 'master' as the name of the default branch.
+	defaultBranch = master
+	
 [pull]
+	# Explicitly disable rebasing by default on pull.
 	rebase = false
+	
+[tag]
+	# GPG sign tags by default.
+	gpgSign = true
+	
+[user]
+	# Set the default name to sign commits with.
+	name = Trevor Sears
+	
+	# Set the default email to sign commits with.
+	email = trevor@trevorsears.com
+	
+	# Set the ID of the GPG key that should be used by default to sign commits
+	# with.
+	signingKey = 0A5BEA5A716C1061
+	
