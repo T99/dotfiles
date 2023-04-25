@@ -46,3 +46,6 @@
 	# with.
 	signingKey = 0A5BEA5A716C1061
 	
+[push]
+	default = current
+	
