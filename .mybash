@@ -25,6 +25,66 @@
 	export MYBASHRC="$HOME/.bashrc"
 	export MYVIMRC="$HOME/.vimrc"
 	export MYTMUXRC="$HOME/.tmux.conf"
+	
+# Custom Prompt
+	
+	function getForegroundColor {
+		
+		echo "\[\033[38;5;${1}m\]"
+		
+	}
+	
+	function getBackgroundColor {
+		
+		echo "\[\033[48;5;${1}m\]"
+		
+	}
+	
+	function setPrompt {
+		
+		local last_exit_code="$?"
+		
+		PS1=""
+		
+	    local format_red=$(getForegroundColor 196)
+	    local format_green=$(getForegroundColor 046)
+	    local format_gray=$(getForegroundColor 248)
+		local format_blue=$(getForegroundColor 33)
+	    local format_reset="\[\033[0m\]"
+		
+		# Add an indicator for the exit code of the last command.
+		if [ "$last_exit_code" != 0 ]; then
+			local xmark="X"
+			PS1+="${format_red}${xmark}${format_reset} "
+		else
+			local checkmark=$'\u2713'
+			PS1+="${format_green}${checkmark}${format_reset} "
+		fi
+		
+		# Add the username.
+		PS1+="${format_green}\u${format_reset}"
+		
+		# Add an '@' separator between the username and the hostname.
+		PS1+="${format_gray}@${format_reset}"
+		
+		# Add the full hostname.
+		PS1+="${format_green}\H${format_reset} "
+		
+		# Add a ':' separator between the hostname and the CWD.
+		# PS1+="${format_gray}:${format_reset}"
+		
+		# Add the full current working directory.
+		PS1+="${format_blue}\w${format_reset}"
+		
+		# Add a '$' character at the end of the prompt.
+		PS1+="${format_gray}\$${format_reset}"
+		
+		# Add an extra space for visual clarity.
+		PS1+=" "
+		
+	}
+	
+	PROMPT_COMMAND="setPrompt"
 
 # Custom Aliases
 
