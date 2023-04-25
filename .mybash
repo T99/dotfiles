@@ -112,7 +112,8 @@
 	alias grep="grep --color=auto"
 	alias egrep="egrep --color=auto"
 	alias fgrep="fgrep --color=auto"
-	alias tree="tree -alpughFCD --dirsfirst --du --timefmt='$TREE_DATETIME_FORMAT'"
+	alias trees="\tree -alhF --dirsfirst --du"
+	alias tree="\tree -alpughFCD --dirsfirst --du --timefmt='$TREE_DATETIME_FORMAT'"
 
 	# Alias to automatically fully reinitialize the current NPM package environment.
 	alias npmr="rm -rf ./package-lock.json ./node_modules && npm i"
