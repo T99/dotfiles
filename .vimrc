@@ -24,6 +24,9 @@
 
 	" Enable syntax highlighting.
 	syntax on
+	
+	" Show a count of search results in the short message.
+	set shortmess-=S
 
 " Indentation Settings
 	
@@ -42,6 +45,11 @@
 	"     spaces and tabs would be inserted to produce the desired amount of
 	"     indentation.
 	set shiftwidth=4
+
+" Folding Settings
+	
+	" Set folding mode to manual.
+	set foldmethod=manual
 
 " Key Mapping/Remapping
 
