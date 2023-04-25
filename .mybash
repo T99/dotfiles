@@ -41,9 +41,10 @@
 	alias edittmux="$EDITOR $MYTMUXRC"
 
 	# Set variables for the date and datetime formats to use for 'ls'.
-	LS_DATE_FORMAT="+%b %d '\''%y"
+	BASE_DATE_FORMAT="%b %d '\''%y"
+	LS_DATE_FORMAT="+$BASE_DATE_FORMAT"
 	LS_DATETIME_FORMAT="$LS_DATE_FORMAT %r"
-	TREE_DATETIME_FORMAT="%b %d '\''%y %I:%M:%S %p"
+	TREE_DATETIME_FORMAT="$BASE_DATE_FORMAT %I:%M:%S %p"
 
 	# Shadow aliases for a number of commands to set default options.
 	alias ls="ls -lAhp --color --group-directories-first --time-style='$LS_DATE_FORMAT'"
