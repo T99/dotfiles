@@ -29,29 +29,17 @@
 	
 # Custom Prompt
 	
-	function getForegroundColor {
-		
-		echo "\[\033[38;5;${1}m\]"
-		
-	}
-	
-	function getBackgroundColor {
-		
-		echo "\[\033[48;5;${1}m\]"
-		
-	}
-	
 	function setPrompt {
 		
 		local last_exit_code="$?"
 		
 		PS1=""
 		
-	    local format_red=$(getForegroundColor 196)
-	    local format_green=$(getForegroundColor 046)
-	    local format_gray=$(getForegroundColor 248)
-		local format_blue=$(getForegroundColor 33)
-	    local format_reset="\[\033[0m\]"
+		local format_red="\[\033[38;5;196m\]"
+		local format_green="\[\033[38;5;046m\]"
+		local format_gray="\[\033[38;5;248m\]"
+		local format_blue="\[\033[38;5;33m\]"
+		local format_reset="\[\033[0m\]"
 		
 		# Add an indicator for the exit code of the last command.
 		if [ "$last_exit_code" != 0 ]; then
@@ -84,9 +72,6 @@
 		PS1+=" "
 		
 	}
-	
-	unset -f getForegroundColor
-	unset -f getBackgroundColor
 	
 	PROMPT_COMMAND="setPrompt"
 
