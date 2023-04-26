@@ -20,7 +20,8 @@
 	export VISUAL=vim
 	export EDITOR="$VISUAL"
 
-	# Set environment variables that point to the locations of various configuration files.
+	# Set environment variables that point to the locations of various
+	# configuration files.
 	export MYBASH="$HOME/.mybash"
 	export MYBASHRC="$HOME/.bashrc"
 	export MYVIMRC="$HOME/.vimrc"
@@ -110,21 +111,28 @@
 	TREE_DATETIME_FORMAT="$BASE_DATE_FORMAT %I:%M:%S %p"
 
 	# Shadow aliases for a number of commands to set default options.
-	alias ls="ls -lAhp --color --group-directories-first --time-style='$LS_DATE_FORMAT'"
+	alias ls="ls -lAhp --color --group-directories-first " \
+		"--time-style='$LS_DATE_FORMAT'"
 	alias lst="ls --time-style='$LS_DATETIME_FORMAT'"
 	alias grep="grep --color=auto"
 	alias egrep="egrep --color=auto"
 	alias fgrep="fgrep --color=auto"
 	alias trees="\tree -alhF --dirsfirst --du"
-	alias tree="\tree -alpughFCD --dirsfirst --du --timefmt='$TREE_DATETIME_FORMAT'"
+	alias tree="\tree -alpughFCD --dirsfirst --du " \
+		"--timefmt='$TREE_DATETIME_FORMAT'"
 
-	# Alias to automatically fully reinitialize the current NPM package environment.
+	# Alias to automatically fully reinitialize the current NPM package
+	# environment.
 	alias npmr="rm -rf ./package-lock.json ./node_modules && npm i"
 
 # Custom Installations
 
-	# Load NMV (Node Version Manager)
+	# Load NVM (Node Version Manager)
 	export NVM_DIR="/opt/nvm"
-	[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-	[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+	
+	# This loads NVM
+	[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+	
+	# This loads NVM bash_completion.
+	[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
 
