@@ -1,0 +1,432 @@
+#!/bin/sh
+
+# Author: Trevor Sears <trevors@trevorsears.com>
+# Last updated: 2023/04/25
+# Description: A portable utility for trimming/removing/collapsing whitespace.
+
+# TODO -- Add flags on each argument to inform which characters should be
+#         trimmed for that flag.
+
+# Exit immediately if any command fails.
+set -e
+
+# Print out usage information/documentation for this script.
+printUsageMessage() {
+
+	cat << EOM
+Usage: trim [-l,--line|-ls,--line-start|-le,--line-end]
+            [-f,--filter|-fs,--filter-start|-fe,--filter-end|-fi,--filter-internal|-fa,--filter-all]
+            [-c,--collapse|-cv,--collapse-vertical|-ch,--collapse-horizontal]
+			[-a,--all]
+
+Provides various options for trimming/removing/collapsing whitespace.
+
+If no options are provided, the default flag set is:
+
+    trim --line-start --line-end --filter-start --filter-end
+
+...which will trim leading and trailing whitespace from each line of the input,
+as well as remove leading and trailing empty lines.
+
+Flags:
+    -l, --line
+        Trims leading and trailing whitespace from each line of the input.
+        
+        Implies --line-start and --line-end.
+    
+    -ls, --line-start
+        Trims leading whitespace from each line of the input.
+    
+    -le, --line-end
+        Trims trailing whitespace from each line of the input.
+    
+    -f, --filter
+        Removes leading and trailing empty lines from the input.
+        
+        Implies --filter-start and --filter-end. Does NOT imply
+        --filter-internal. See the --filter-all option for removing ALL empty
+        lines from the input.
+    
+    -fs, --filter-start
+        Removes leading empty lines from the input.
+    
+    -fe, --filter-end
+        Removes trailing empty lines from the input.
+    
+    -fi, --filter-internal
+        Removes any empty lines that occur between non-empty lines of the
+        input.
+    
+    -c, --collapse
+        Collapses both vertical and horizontal whitespace in the input. This
+        entails reducing contigious spans of whitespace down to a single
+        character.
+        
+    -cv, --collapse-vertical
+        Collapses vertical whitespace in the input. This entails reducing
+        contigious spans of empty lines down to a single empty line.
+    
+    -ch, --collapse-horizontal
+        Collapses horizontal whitespace in the input. This entails reducing
+        contiguous spans of characters such as spaces and tabs down to a single
+        space character.
+    
+    -a, --all
+        An alias for using all flags.
+        
+        Implies --line-start, --line-end, --filter-start, --filter-end,
+        --filter-internal, --collapse-vertical, and --collapse-horizontal.
+    
+    -h, --help
+        Print out this help message.
+
+EOM
+	
+}
+
+while [ "$#" -gt 0 ]; do
+	
+	case "$1" in
+		
+		-l|--line)
+			shift
+			FLAG_ANY="yes"
+			FLAG_LINE="yes"
+			;;
+		
+		-ls|--line-start)
+			shift
+			FLAG_ANY="yes"
+			FLAG_LINE_START="yes"
+			;;
+		
+		-le|--line-end)
+			shift
+			FLAG_ANY="yes"
+			FLAG_LINE_END="yes"
+			;;
+		
+		-f|--filter)
+			shift
+			FLAG_ANY="yes"
+			FLAG_FILTER="yes"
+			;;
+		
+		-fs|--filter-start)
+			shift
+			FLAG_ANY="yes"
+			FLAG_FILTER_START="yes"
+			;;
+		
+		-fe|--find-end)
+			shift
+			FLAG_ANY="yes"
+			FLAG_FILTER_END="yes"
+			;;
+		
+		-fi|--filter-internal)
+			shift
+			FLAG_ANY="yes"
+			FLAG_FILTER_INTERNAL="yes"
+			;;
+			
+		-fa|--filter-all)
+			shift
+			FLAG_ANY="yes"
+			FLAG_FILTER_ALL="YES"
+			;;
+		
+		-c|--collapse)
+			shift
+			FLAG_ANY="yes"
+			FLAG_COLLAPSE="yes"
+			;;
+		
+		-cv|--collapse-vertical)
+			shift
+			FLAG_ANY="yes"
+			FLAG_COLLAPSE_VERTICAL="yes"
+			;;
+		
+		-ch|--collapse-horizontal)
+			shift
+			FLAG_ANY="yes"
+			FLAG_COLLAPSE_HORIZONTAL="yes"
+			;;
+		
+		-a|--all)
+			shift
+			FLAG_ANY="yes"
+			FLAG_ALL="yes"
+			;;
+		
+		--debug)
+			shift
+			DEBUG="yes"
+			;;
+		
+		-h|--help)
+			printUsageMessage
+			exit 0
+			;;
+		
+		-*)
+			echo >&2 "Unrecognized option '$1'..."
+			echo
+			printUsageMessage
+			exit 1
+			;;
+		
+	esac
+	
+done
+
+# If no flags were set, assume the defaults:
+if [ -z "$FLAG_ANY" ]; then
+	
+	SHOULD_TRIM_LINE_START="yes"
+	SHOULD_TRIM_LINE_END="yes"
+	SHOULD_FILTER_LEADING_EMPTY_LINES="yes"
+	SHOULD_FILTER_TRAILING_EMPTY_LINES="yes"
+	
+# If the 'all' flag was set:
+elif [ -n "$FLAG_ALL" ]; then
+	
+	SHOULD_TRIM_LINE_START="yes"
+	SHOULD_TRIM_LINE_END="yes"
+	SHOULD_FILTER_LEADING_EMPTY_LINES="yes"
+	SHOULD_FILTER_TRAILING_EMPTY_LINES="yes"
+	SHOULD_FILTER_INTERNAL_EMPTY_LINES="yes"
+	SHOULD_COLLAPSE_VERTICAL_WHITESPACE="yes"
+	SHOULD_COLLAPSE_HORIZONTAL_WHITESPACE="yes"
+	
+# Otherwise...
+else
+	
+	if [ -n "$FLAG_LINE" ]; then
+		
+		SHOULD_TRIM_LINE_START="yes"
+		SHOULD_TRIM_LINE_END="yes"
+		
+	else
+		
+		if [ -n "$FLAG_LINE_START" ]; then
+			
+			SHOULD_TRIM_LINE_START="yes"
+			
+		fi
+		
+		if [ -n "$FLAG_LINE_END" ]; then
+			
+			SHOULD_TRIM_LINE_END="yes"
+			
+		fi
+		
+	fi
+	
+	if [ -n "$FLAG_FILTER" ]; then
+		
+		SHOULD_FILTER_LEADING_EMPTY_LINES="yes"
+		SHOULD_FILTER_TRAILING_EMPTY_LINES="yes"
+		
+	elif [ -n "$FLAG_FILTER_ALL" ]; then
+		
+		SHOULD_FILTER_LEADING_EMPTY_LINES="yes"
+		SHOULD_FILTER_TRAILING_EMPTY_LINES="yes"
+		SHOULD_FILTER_INTERNAL_EMPTY_LINES="yes"
+		
+	else
+		
+		if [ -n "$FLAG_FILTER_START" ]; then
+			
+			SHOULD_FILTER_LEADING_EMPTY_LINES="yes"
+			
+		fi
+		
+		if [ -n "$FLAG_FILTER_END" ]; then
+			
+			SHOULD_FILTER_TRAILING_EMPTY_LINES="yes"
+			
+		fi
+		
+	fi
+	
+	if [ -n "$FLAG_FILTER_INTERNAL" ]; then
+		
+		SHOULD_FILTER_INTERNAL_EMPTY_LINES="yes"
+		
+	fi
+		
+	if [ -n "$FLAG_COLLAPSE" ]; then
+		
+		SHOULD_COLLAPSE_VERTICAL_WHITESPACE="yes"
+		SHOULD_COLLAPSE_HORIZONTAL_WHITESPACE="yes"
+		
+	else
+		
+		if [ -n "$FLAG_COLLAPSE_VERTICAL" ]; then
+			
+			SHOULD_COLLAPSE_VERTICAL_WHITESPACE="yes"
+			
+		fi
+		
+		if [ -n "$FLAG_COLLAPSE_HORIZONTAL" ]; then
+			
+			SHOULD_COLLAPSE_HORIZONTAL_WHITESPACE="yes"
+			
+		fi
+		
+	fi
+	
+fi
+
+if [ -n "$DEBUG" ]; then
+	
+	(set -o posix ; set) | grep "^SHOULD_"
+	exit 0
+
+fi
+
+GREP_EMPTY_LINE_PATTERN="^[[:space:]]*$"
+
+isLineEmpty() {
+	
+	if [ -z "$1" ]; then
+		
+		echo "yes"
+		
+	else
+		
+		local total_lines=$(echo "$1" | wc --lines)
+		local empty_lines=$(
+			echo -n "$1" | \
+			grep --count "$GREP_EMPTY_LINE_PATTERN"
+		)
+		
+		if [ "$total_lines" = "$empty_lines" ]; then
+			
+			echo "yes"
+			
+		fi
+		
+	fi
+	
+}
+
+if [ -n "$SHOULD_TRIM_LINE_START" ] && [ -n "$SHOULD_TRIM_LINE_END" ]; then
+	
+	SED_TRIM_COMMAND="s/(^[[:space:]]+|[[:space:]]+$)//g"
+	
+elif [ -n "$SHOULD_TRIM_LINE_START" ]; then
+	
+	SED_TRIM_COMMAND="s/^[[:space:]]+//g"
+	
+elif [ -n "$SHOULD_TRIM_LINE_END" ]; then
+	
+	SED_TRIM_COMMAND="s/[[:space:]]+$//g"
+	
+fi
+
+perLineOperations() {
+
+	local result="$1"
+	
+	if [ -n "$SED_TRIM_COMMAND" ]; then
+		
+		result=$(echo "$result" | sed -E "$SED_TRIM_COMMAND")
+		
+	fi
+	
+	if [ -n "$SHOULD_COLLAPSE_HORIZONTAL_WHITESPACE" ]; then
+		
+		result=$(echo "$result" | sed -E "s/\\s+/ /g")
+		
+	fi
+	
+	echo -n "$result"
+	
+}
+
+LF="
+"
+EMPTY_LINE_BUFFER=""
+RESULT=""
+
+IFS_ORIGINAL="$IFS"
+IFS=""
+
+while read -r LINE; do
+	
+	LINE=$(perLineOperations "$LINE")
+	
+	# Add another empty line to the EMPTY_LINE_BUFFER, if the current line is
+	# empty AND either:
+	#   - We ARE collapsing vertical whitespace AND the EMPTY_LINE_BUFFER is
+	#     empty. Or...
+	#   - We ARE NOT collapsing vertical whitespace.
+	if [ -n "$(isLineEmpty "$LINE")" ]; then
+		
+		if [ -n "$SHOULD_COLLAPSE_VERTICAL_WHITESPACE" ]; then
+			
+			if [ -z "$EMPTY_LINE_BUFFER" ]; then
+				
+				EMPTY_LINE_BUFFER="${EMPTY_LINE_BUFFER}${LF}"
+				
+			fi
+			
+		else
+			
+			EMPTY_LINE_BUFFER="${EMPTY_LINE_BUFFER}${LF}"
+			
+		fi
+		
+	# If the current line is NOT empty:
+	else
+		
+		# This is our first non-empty line, so anything in the
+		# EMPTY_LINE_BUFFER must be leading empty lines:
+		if [ -z "$HAS_FOUND_NONEMPTY_LINES" ]; then
+			
+			# Flag that we've found at least one non-empty line.
+			HAS_FOUND_NONEMPTY_LINES="yes"
+			
+			# Because this is our first non-empty line, anything in the
+			# EMPTY_LINE_BUFFER must be leading empty lines. If we aren't
+			# filtering leading empty lines, add them to the RESULT.
+			if [ -z "$SHOULD_FILTER_LEADING_EMPTY_LINES" ]; then
+				
+				RESULT="${RESULT}${EMPTY_LINE_BUFFER}"
+				
+			fi
+			
+		# This is NOT our first non-empty line, so anything in the
+		# EMPTY_LINE_BUFFER must be internal empty lines. If we aren't
+		# filtering internal empty lines, add them to the RESULT.
+		elif [ -z "$SHOULD_FILTER_INTERNAL_EMPTY_LINES" ]; then
+			
+			RESULT="${RESULT}${EMPTY_LINE_BUFFER}"
+			
+		fi
+		
+		RESULT="${RESULT}${LINE}${LF}"		
+		
+		# Clear out the EMPTY_LINE_BUFFER. If we haven't already used it, we
+		# aren't going to.
+		EMPTY_LINE_BUFFER=""
+		
+	fi
+	
+done
+
+# Anything remaining in the EMPTY_LINE_BUFFER must be trailing empty lines. If
+# we're NOT filtering trailing empty lines, add them to the RESULT.
+if [ -z "$SHOULD_FILTER_TRAILING_EMPTY_LINES" ]; then
+	
+	RESULT="${RESULT}${EMPTY_LINE_BUFFER}"
+	
+fi
+
+IFS="$IFS_ORIGINAL"
+
+echo -n "$RESULT"
+
