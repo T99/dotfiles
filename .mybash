@@ -18,7 +18,7 @@
 # Custom Environment Variables
 
 	# Set the default editors.
-	export VISUAL=vim
+	export VISUAL="vim"
 	export EDITOR="$VISUAL"
 	
 	# Set the default content pager.
