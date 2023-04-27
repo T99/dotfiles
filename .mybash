@@ -44,6 +44,9 @@
 
 # $PATH Modifications
 	
+	# Add the scripts directory of this repository to the $PATH.
+	export PATH="$(dirname "$MYBASH")/scripts:$PATH"
+	
 	# Add the scriptbin to the $PATH.
 	export PATH="$HOME/dev/scriptbin:$PATH"
 
