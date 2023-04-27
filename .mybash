@@ -37,7 +37,7 @@
 
 	# Set environment variables that point to the locations of various
 	# configuration files.
-	export MYBASH="$HOME/.mybash"
+	export MYBASH=$(realpath "$BASH_SOURCE")
 	export MYBASHRC="$HOME/.bashrc"
 	export MYVIMRC="$HOME/.vimrc"
 	export MYTMUXRC="$HOME/.tmux.conf"
