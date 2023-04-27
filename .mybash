@@ -20,6 +20,25 @@
 	# Set the default editors.
 	export VISUAL=vim
 	export EDITOR="$VISUAL"
+	
+	# Set the default content pager.
+	export PAGER="less"
+	
+	# Prevent Bash from filtering out any commands from going to history file.
+	export HISTCONTROL=""
+	
+	# Configure Bash to keep up to 100,000 commands in the in-memory history.
+	export HISTSIZE="100000"
+	
+	# Configure Bash to keep up to 100,000 commands in the history file.
+	export HISTFILESIZE="100000"
+	
+	# Configure the history command to show timestamp for each history entry in
+	# the following format:
+	#     [Thu, Apr 27 2023 at 03:52:27pm] <command>
+	# Notice the trailing whitespace character to preserve space between the
+	# time string and the actual command.
+	export HISTTIMEFORMAT="[%a, %b %d %Y at %I:%M:%S%P] "
 
 	# Set environment variables that point to the locations of various
 	# configuration files.
