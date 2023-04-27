@@ -58,10 +58,10 @@
 		PS1+="${format_gray}@${format_reset}"
 		
 		# Add the full hostname.
-		PS1+="${format_green}\H${format_reset} "
+		PS1+="${format_green}\H${format_reset}"
 		
 		# Add a ':' separator between the hostname and the CWD.
-		# PS1+="${format_gray}:${format_reset}"
+		PS1+="${format_gray}:${format_reset}"
 		
 		# Add the full current working directory.
 		PS1+="${format_blue}\w${format_reset}"
