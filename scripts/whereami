@@ -1,0 +1,33 @@
+#!/usr/bin/env sh
+
+# The base name of the file to check for a custom name for this machine.
+WHERE_I_AM_FILE_NAME=".whereiam"
+
+# The full path to the above file.
+WHERE_I_AM_FILE="$HOME/$WHERE_I_AM_FILE_NAME"
+
+# If the WHERE_I_AM_FILE exists, is readable, and is not empty:
+if [ -r "$WHERE_I_AM_FILE" ] && [ -s "$WHERE_I_AM_FILE" ]; then
+	
+	cat "$WHERE_I_AM_FILE"
+
+else
+	
+	# If the WHERE_I_AM_FILE does not exist:
+	if [ ! -e "$WHERE_I_AM_FILE" ]; then
+		
+		touch "$WHERE_I_AM_FILE"
+		
+		echo "It looks like this might be your first time running whereami." \
+			" We've gone ahead and created ~/$WHERE_I_AM_FILE_NAME for you," \
+			"but it is still blank. If you'd like to change the name that you" \
+			"use for this connection/host, edit this file." | \
+			fold -s >&2
+		
+	fi
+	
+	# Fall back to using the FQDN for this machine.
+	hostname --fqdn
+	
+fi
+
