@@ -45,7 +45,7 @@
 # $PATH Modifications
 	
 	# Add the scriptbin to the $PATH.
-	export PATH="$PATH:$HOME/dev/scriptbin"
+	export PATH="$HOME/dev/scriptbin:$PATH"
 
 # Custom Prompt
 	
