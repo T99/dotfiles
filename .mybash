@@ -10,11 +10,6 @@
 	# Allow Bash to expand '.' as part of filename globbing.
 	shopt -s dotglob
 
-# $PATH Modifications
-
-	# Add the scriptbin to the $PATH.
-	export PATH="$PATH:$HOME/dev/scriptbin"
-
 # Custom Environment Variables
 
 	# Set the default editors.
@@ -46,7 +41,12 @@
 	export MYBASHRC="$HOME/.bashrc"
 	export MYVIMRC="$HOME/.vimrc"
 	export MYTMUXRC="$HOME/.tmux.conf"
+
+# $PATH Modifications
 	
+	# Add the scriptbin to the $PATH.
+	export PATH="$PATH:$HOME/dev/scriptbin"
+
 # Custom Prompt
 	
 	function setPrompt {
