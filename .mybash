@@ -32,14 +32,17 @@
 	
 	function setPrompt {
 		
+		# Store the exit code of the last executed command.
 		local last_exit_code="$?"
 		
+		# Create a couple of helper variables for formatting text.
 		local format_red="\[\033[38;5;196m\]"
 		local format_green="\[\033[38;5;046m\]"
 		local format_gray="\[\033[38;5;248m\]"
 		local format_blue="\[\033[38;5;33m\]"
 		local format_reset="\[\033[0m\]"
 		
+		# Reset PS1 to the empty string.
 		PS1=""
 		
 		# Add an indicator for the exit code of the last command.
@@ -74,6 +77,8 @@
 		
 	}
 	
+	# Set the PROMPT_COMMAND environment variable in order to tell bash that it
+	# should execute the 'setPrompt' function beforce printing PS1.
 	PROMPT_COMMAND="setPrompt"
 
 # Custom Aliases
