@@ -52,6 +52,7 @@
 	function setPrompt {
 		
 		# Store the exit code of the last executed command.
+		# Note that this NEEDS to be at the very beginning of this function!
 		local last_exit_code="$?"
 		
 		# Create a couple of helper variables for formatting text.
