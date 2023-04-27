@@ -83,8 +83,9 @@
 		# Add an '@' separator between the username and the hostname.
 		PS1+="${format_gray}@${format_reset}"
 		
-		# Add the full hostname.
-		PS1+="${format_green}\H${format_reset}"
+		# Add the current 'location' (can be hostname or custom value).
+		# See: <repository_root>/scripts/whereami for more info.
+		PS1+="${format_green}$(whereami)${format_reset}"
 		
 		# Add a ':' separator between the hostname and the CWD.
 		PS1+="${format_gray}:${format_reset}"
