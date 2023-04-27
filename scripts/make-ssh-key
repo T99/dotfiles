@@ -1,0 +1,33 @@
+#!/bin/sh
+
+# TODO -- check if key already exists, check that $1 was actually provided
+
+# What to call the local machine/host.
+LOCAL_NAME=$(whereami)
+
+# What to call the remote machine/host.
+REMOTE_NAME="${1}"
+
+# The directory that we want to store the generate keyfile in.
+KEY_FILE_DIRECTORY="${HOME}/.ssh/ids"
+
+# The name that should be given to the resulting keyfile.
+KEY_NAME="${LOCAL_NAME}-to-${REMOTE_NAME}"
+
+# The full path to the keyfile being generated.
+KEY_FILE="${KEY_FILE_DIRECTORY}/${KEY_NAME}"
+
+# Ensure that the directory that we want to put the keyfile in exists.
+mkdir -p "${KEY_FILE_DIRECTORY}"
+
+# Generate the keyfile.
+ssh-keygen \
+	-f "${KEY_FILE}" \
+	-t "rsa-sha2-512" \
+	-C "Keyfile for: ${KEY_NAME}" \
+	-N "" \
+	-q
+
+echo "Here's your new public key:"
+cat "${KEY_FILE}.pub"
+
