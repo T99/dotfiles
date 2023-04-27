@@ -34,13 +34,13 @@
 		
 		local last_exit_code="$?"
 		
-		PS1=""
-		
 		local format_red="\[\033[38;5;196m\]"
 		local format_green="\[\033[38;5;046m\]"
 		local format_gray="\[\033[38;5;248m\]"
 		local format_blue="\[\033[38;5;33m\]"
 		local format_reset="\[\033[0m\]"
+		
+		PS1=""
 		
 		# Add an indicator for the exit code of the last command.
 		if [ "$last_exit_code" != 0 ]; then
