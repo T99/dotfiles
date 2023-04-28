@@ -24,4 +24,5 @@
    isn't already set up.
  - Implement all Bash/sh scripts in PowerShell.
  - Add script for converting between git SSH remote and HTTP remote.
+ - Fix broken 'ReShell' function in PowerShell profile.
 
