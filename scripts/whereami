@@ -1,5 +1,7 @@
 #!/usr/bin/env sh
 
+# TODO -- Add a usage message, add a -r/--reset flag that empties .whereiam.
+
 # The base name of the file to check for a custom name for this machine.
 WHERE_I_AM_FILE_NAME=".whereiam"
 
@@ -7,27 +9,36 @@ WHERE_I_AM_FILE_NAME=".whereiam"
 WHERE_I_AM_FILE="$HOME/$WHERE_I_AM_FILE_NAME"
 
 # If the WHERE_I_AM_FILE exists, is readable, and is not empty:
-if [ -r "$WHERE_I_AM_FILE" ] && [ -s "$WHERE_I_AM_FILE" ]; then
+if [ -r "$WHERE_I_AM_FILE" ]; then
 	
-	cat "$WHERE_I_AM_FILE"
-
-else
+	# Grab the file contents and trim off whitespace.
+	WHERE_AM_I_FILE_CONTENTS=$(cat "$WHERE_I_AM_FILE" | trim)
 	
-	# If the WHERE_I_AM_FILE does not exist:
-	if [ ! -e "$WHERE_I_AM_FILE" ]; then
+	# If the WHERE_I_AM_FILE has non-whitespace contents:
+	if [ -n "$WHERE_AM_I_FILE_CONTENTS" ]; then
 		
-		touch "$WHERE_I_AM_FILE"
-		
-		echo "It looks like this might be your first time running whereami." \
-			" We've gone ahead and created ~/$WHERE_I_AM_FILE_NAME for you," \
-			"but it is still blank. If you'd like to change the name that you" \
-			"use for this connection/host, edit this file." | \
-			fold -s >&2
+		echo "$WHERE_AM_I_FILE_CONTENTS"
+		return 0
 		
 	fi
 	
-	# Fall back to using the FQDN for this machine.
-	hostname --fqdn
+fi
+
+# If the WHERE_I_AM_FILE does not exist:
+if [ ! -e "$WHERE_I_AM_FILE" ]; then
+	
+	# Create it.
+	touch "$WHERE_I_AM_FILE"
+	
+	# And inform the user about what is going on.
+	echo "It looks like this might be your first time running whereami. We've"\
+		"gone ahead and created ~/$WHERE_I_AM_FILE_NAME for you, but it is"\
+		"still blank. If you'd like to change the name that you use for this"\
+		"connection/host, edit this file." | \
+		fold -s >&2
 	
 fi
+
+# Fall back to using the FQDN for this machine.
+hostname --fqdn
 
