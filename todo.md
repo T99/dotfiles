@@ -23,4 +23,5 @@
  - Remove GPG key section from .gitconfig, prompt user to configure it if it
    isn't already set up.
  - Implement all Bash/sh scripts in PowerShell.
+ - Add script for converting between git SSH remote and HTTP remote.
 
