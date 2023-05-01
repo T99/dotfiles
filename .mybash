@@ -152,3 +152,53 @@
 	# This loads NVM bash_completion.
 	[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
 
+# Custom Banner/MOTD
+
+	function botd {
+		
+		local max_print_width="80"
+		local term_width=$(tput cols)
+		local print_width="$(
+			echo -n "$max_print_width $term_width" |\
+			xargs --max-args 1 |\
+			sort --general-numeric-sort |\
+			head --lines 1
+		)"
+		
+		# Give ourselves a bit of space...
+		echo
+		
+		# Print 'Welcome to...'
+		figlet "Welcome to..."               \
+			-l                               \
+			-s                               \
+			-w "$print_width"                \
+			-f "$DOTFILES/figlet/short.flf" |\
+		trim                                 \
+			--filter
+		
+		# More space...
+		echo
+		
+		# Print the name of the machine.
+		figlet "$(whereami)"                 \
+			-l                               \
+			-s                               \
+			-w "$print_width"                \
+			-f "$DOTFILES/figlet/roman.flf" |\
+		trim                                 \
+			--filter                        |\
+		lolcat                               \
+			--spread 2                       \
+			--freq 0.1
+		
+		# And finally some space after the text.
+		echo
+		
+	}
+	
+# Do a little cleanup at the end:
+export HAS_MYBASH_RUN_YET="yes"
+	
+# All done, print the BOTD:
+botd
