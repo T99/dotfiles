@@ -41,6 +41,7 @@
 	export MYBASHRC=$(realpath "$HOME/.bashrc")
 	export MYVIMRC=$(realpath "$HOME/.vimrc")
 	export MYTMUXRC=$(realpath "$HOME/.tmux.conf")
+	export DOTFILES=$(dirname "$MYBASH")
 
 # $PATH Modifications
 	
